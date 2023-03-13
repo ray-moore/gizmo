@@ -62,7 +62,7 @@ public class Example {
 }
 ```
 
-... produces the following HTML content
+... produces the following HTML content...
 
 ```html
 <!DOCTYPE html>
@@ -98,3 +98,7 @@ public class Example {
   </body>
 </html>
 ```
+
+... which may be previewed using the link below.
+
+https://htmlpreview.github.io/?https://github.com/ray-moore/gizmo/blob/master/example.html
