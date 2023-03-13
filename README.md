@@ -44,7 +44,7 @@ public class Example {
             div.appendChild(p);
         }
 
-        Document html = new Document("Demo").init();
+        Document html = new Document("Example").init();
         html.setContent(content);
 
         System.out.println(html);
@@ -55,7 +55,7 @@ public class Example {
         data.add(new Bookmark("Apple", "https://apple.com"));
         data.add(new Bookmark("Google", "http://google.com"));
         data.add(new Bookmark("Netflix", "http://netflix.com"));
-        data.add(new Bookmark("<This> & <That>", "http://testcase.com"));
+        data.add(new Bookmark("<This> & <That>", "http://testcase.dev"));
 
         return data;
     }
@@ -68,7 +68,7 @@ public class Example {
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Demo</title>
+    <title>Example</title>
     <meta charset="UTF-8">
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
