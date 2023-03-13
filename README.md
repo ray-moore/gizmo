@@ -90,7 +90,7 @@ public class Example {
           <p>This is another paragraph with no inline elements</p>
         </div>
         <div class="bookmark">
-          <p>Click <a class="bold" href="http://testcase.com" target="_blank">here</a> to navigate to the &lt;This&gt; &amp; &lt;That&gt; website</p>
+          <p>Click <a class="bold" href="http://testcase.dev" target="_blank">here</a> to navigate to the &lt;This&gt; &amp; &lt;That&gt; website</p>
           <p>This is another paragraph with no inline elements</p>
         </div>
       </div>
