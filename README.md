@@ -49,6 +49,17 @@ public class Example {
 
         System.out.println(html);
     }
+    
+    public static List<Bookmark> mockData() {
+        List<Bookmark> data = new ArrayList<>();
+        data.add(new Bookmark("Apple", "https://apple.com"));
+        data.add(new Bookmark("Google", "http://google.com"));
+        data.add(new Bookmark("Netflix", "http://netflix.com"));
+        data.add(new Bookmark("<This> & <That>", "http://testcase.com"));
+
+        return data;
+    }
+}
 ```
 
 ... produces the following HTML content
