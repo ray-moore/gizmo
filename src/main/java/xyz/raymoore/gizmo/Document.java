@@ -23,7 +23,7 @@ public class Document extends Element {
 
     /**
      * Initializes document with various <meta> information added to the <head> element
-     * The equivalent of the Visual Studio Code "!" HTML boilerplate
+     * The equivalent of the Visual Studio Code "!" HTML boilerplate (as of 2023)
      * @return this
      */
     public Document init() {

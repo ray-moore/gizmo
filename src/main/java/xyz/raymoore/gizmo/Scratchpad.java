@@ -10,12 +10,11 @@ import java.util.List;
 
 /**
  * This class is used as a "scratchpad" and is constantly in flux.
- * TODO: Add this to .gitignore?
  */
 public class Scratchpad {
     public static void main(String[] args) {
         ContainerElement content = new ContainerElement();
-        content.setId("content");
+        content.setId("example");
 
         HeaderElement title = new HeaderElement(HeaderElement.Level.h1);
         title.setText("Bookmark List");
@@ -25,12 +24,13 @@ public class Scratchpad {
         list.addClass("bookmark-list");
         content.appendChild(list);
 
+        ContainerElement div;
+        AnchorElement a;
+        ParagraphElement p;
+
         List<Bookmark> bookmarks = mockData();  // Mock database retrieval
         for (Bookmark bookmark : bookmarks) {
-            AnchorElement a;
-            ParagraphElement p;
-
-            ContainerElement div = new ContainerElement();
+            div = new ContainerElement();
             div.addClass("bookmark");
             list.appendChild(div);
 
@@ -44,7 +44,7 @@ public class Scratchpad {
             p = new ParagraphElement();
             p.addText("Click ");
             p.addElement(a);
-            p.addText(String.format(" to navigate to the %s website", bookmark.NAME));
+            p.addText(" to navigate to the %s website", bookmark.NAME);
             div.appendChild(p);
 
             p = new ParagraphElement();
@@ -52,15 +52,14 @@ public class Scratchpad {
             div.appendChild(p);
         }
 
-        Document html = new Document("Demo").init();
+        Document html = new Document("Example").init();
         html.setContent(content);
 
-        System.out.println(html);
+        System.out.println(html);  // Mock page response
     }
 
     public static List<Bookmark> mockData() {
         List<Bookmark> data = new ArrayList<>();
-        data.add(new Bookmark("Apple", "https://apple.com"));
         data.add(new Bookmark("Google", "http://google.com"));
         data.add(new Bookmark("Netflix", "http://netflix.com"));
         data.add(new Bookmark("<This> & <That>", "http://testcase.dev"));

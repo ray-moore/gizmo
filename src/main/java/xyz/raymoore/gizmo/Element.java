@@ -20,7 +20,7 @@ public abstract class Element implements Renderable {
     protected Map<String, String> attributes;
 
     protected List<Element> children;  // List of child elements
-    protected List<Content> content;  // List of inline elements or raw text
+    protected List<Content> content;  // List of inline elements and/or raw text
 
     // --------------------
     //  Constructors
@@ -71,8 +71,16 @@ public abstract class Element implements Renderable {
         this.content.add(new Content(text));
     }
 
+    public void addText(String format, Object... args) {
+        addText(String.format(format, args));
+    }
+
     public void setText(String text) {
         this.content = Collections.singletonList(new Content(text));
+    }
+
+    public void setText(String format, Object... args) {
+        setText(String.format(format, args));
     }
 
     /**
