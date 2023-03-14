@@ -15,8 +15,4 @@ public class HeaderElement extends Element {
     public HeaderElement(Level level) {
         super(Type.block, level.name());
     }
-
-    public void setText(String text) {
-        setContent(text);
-    }
 }

@@ -14,8 +14,4 @@ public class AnchorElement extends Element {
     public void setTarget(String target) {
         setAttribute("target", target);
     }
-
-    public void setText(String text) {
-        setContent(text);
-    }
 }

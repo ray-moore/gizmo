@@ -12,19 +12,15 @@ public abstract class Element implements Renderable {
     //  Fields
     // --------------------
 
-    protected String tag;
+    public static final int BLOCK_ELEMENT_PADDING_CHARS = 2;
+
     protected Type type;
+    protected String tag;
     protected boolean isVoid;  // Void elements do not have a closing tag
     protected Map<String, String> attributes;
 
-    protected List<Element> children;
-
-    protected String content;
-    protected List<Element> args;  // Used with '@@@' placeholder
-
-    public static final int BLOCK_ELEMENT_PADDING_CHARS = 2;
-    public static final String INLINE_ELEMENT_WILDCARD = "@@@";
-
+    protected List<Element> children;  // List of child elements
+    protected List<Content> content;  // List of inline elements or raw text
 
     // --------------------
     //  Constructors
@@ -35,6 +31,7 @@ public abstract class Element implements Renderable {
         this.tag = tag;
         this.attributes = new TreeMap<>();
         this.children = new ArrayList<>();
+        this.content = new ArrayList<>();
     }
 
     // --------------------
@@ -54,20 +51,28 @@ public abstract class Element implements Renderable {
     }
 
     public void setAttribute(String key) {
-        attributes.put(key, null);
+        attributes.put(key, null);  // Used for 'checked', 'hidden', etc.
     }
 
     public void setAttribute(String key, String value) {
         attributes.put(key, value);
     }
 
-    public void setContent(String text) {
-        this.content = text;
+    public void addElement(Element element) {
+        if (element.getType() == Type.block) {
+            String msg = String.format("Cannot use block level '%s' element for inline content", element.getTag());
+            throw new IllegalArgumentException(msg);
+        }
+
+        this.content.add(new Content(element));
     }
 
-    public void setContent(String placeholder, Element... elements) {
-        this.content = placeholder;
-        this.args = List.of(elements);
+    public void addText(String text) {
+        this.content.add(new Content(text));
+    }
+
+    public void setText(String text) {
+        this.content = Collections.singletonList(new Content(text));
     }
 
     /**
@@ -78,7 +83,7 @@ public abstract class Element implements Renderable {
         setAttribute("id", name);
     }
 
-    public Element addClass(String... classes) {
+    public void addClass(String... classes) {
         for (String cls : classes) {
             if (attributes.get("class") == null) {
                 setAttribute("class", cls);
@@ -86,18 +91,24 @@ public abstract class Element implements Renderable {
                 setAttribute("class", String.format("%s %s", attributes.get("class"), cls));
             }
         }
+    }
 
-        return this;
+    public void setClassList(String... classes) {
+        StringBuilder builder = new StringBuilder();
+        for (String cls : classes) {
+            if (builder.length() > 0) {
+                builder.append(" ");
+            }
+            builder.append(cls);
+        }
+
+        setAttribute("class", builder.toString());
     }
 
     /**
      * This returns the HTML as a string
      * @return HTML content
      */
-
-    public String render() {
-        return render(0);
-    }
 
     public String render(int padding) {
         StringBuilder builder = new StringBuilder();
@@ -124,8 +135,8 @@ public abstract class Element implements Renderable {
             return builder.toString();
         }
 
-        // Add inner content with inline element '@@@' wildcard handling
         if (children.size() > 0) {
+            // Render children and handle padding
             for (Element child : children) {
                 builder.append('\n');
                 builder.append(child.render(padding + BLOCK_ELEMENT_PADDING_CHARS));
@@ -133,23 +144,20 @@ public abstract class Element implements Renderable {
             builder.append('\n');
             builder.append(" ".repeat(padding));
         } else {
-            // @formatter:off
-            String innerHTML = content
-                    .replace("&", "&amp;")  // REPLACE '&' FIRST!
-                    .replace("<", "&lt;")
-                    .replace(">", "&gt;");
-            // @formatter:on
-            if (args != null) {
-                for (Element inline : args) {
-                    if (inline.getType() == Type.block) {
-                        String msg = String.format("Cannot use block level '%s' element for inline content", inline.getTag());
-                        throw new IllegalArgumentException(msg);
-                    }
-                    // TODO: Optimize?
-                    innerHTML = innerHTML.replaceFirst(INLINE_ELEMENT_WILDCARD, inline.render(0));
+            // Add inner content of inline elements and raw text
+            for (Content c : content) {
+                if (c.getType() == Content.Type.inline) {
+                    builder.append(c.getElement().render(0));
+                    continue;
                 }
+                // @formatter:off
+                String innerHTML = c.getText()
+                            .replace("&", "&amp;")  // REPLACE '&' FIRST!
+                            .replace("<", "&lt;")
+                            .replace(">", "&gt;");
+                // @formatter:on
+                builder.append(innerHTML);
             }
-            builder.append(innerHTML);
         }
 
         // Close tag
@@ -163,5 +171,44 @@ public abstract class Element implements Renderable {
     @Override
     public String toString() {
         return render(0);
+    }
+
+    // --------------------
+    //  Inner Classes
+    // --------------------
+
+    public static class Content {
+        public enum Type {
+            inline,
+            rawText
+        }
+
+        private final Type type;
+        private final Element element;
+        private final String text;
+
+        Content(Element element) {
+            this.type = Type.inline;
+            this.element = element;
+            this.text = null;
+        }
+
+        Content(String text) {
+            this.type = Type.rawText;
+            this.element = null;
+            this.text = text;
+        }
+
+        public Type getType() {
+            return type;
+        }
+
+        public Element getElement() {
+            return element;
+        }
+
+        public String getText() {
+            return text;
+        }
     }
 }

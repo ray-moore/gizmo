@@ -36,13 +36,15 @@ public class Scratchpad {
 
             a = new AnchorElement();
             a.addClass("bold");
-            a.setText("here");
             a.setReference(bookmark.URL);
             a.setTarget("_blank");
+            a.setText("here");
 
-            // This demonstrates a mix & match of Gizmo '@@@' wildcard and Java '%s' formatting
+            // This demonstrates complex element content with raw text as well as inline element(s)
             p = new ParagraphElement();
-            p.setContent(String.format("Click @@@ to navigate to the %s website", bookmark.NAME), a);
+            p.addText("Click ");
+            p.addElement(a);
+            p.addText(String.format(" to navigate to the %s website", bookmark.NAME));
             div.appendChild(p);
 
             p = new ParagraphElement();
@@ -61,7 +63,7 @@ public class Scratchpad {
         data.add(new Bookmark("Apple", "https://apple.com"));
         data.add(new Bookmark("Google", "http://google.com"));
         data.add(new Bookmark("Netflix", "http://netflix.com"));
-        data.add(new Bookmark("<This> & <That>", "http://testcase.com"));
+        data.add(new Bookmark("<This> & <That>", "http://testcase.dev"));
 
         return data;
     }

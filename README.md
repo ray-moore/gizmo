@@ -23,28 +23,29 @@ public class Example {
         for (Bookmark bookmark : bookmarks) {
             AnchorElement a;
             ParagraphElement p;
-
+            
             ContainerElement div = new ContainerElement();
             div.addClass("bookmark");
             list.appendChild(div);
-
             a = new AnchorElement();
             a.addClass("bold");
-            a.setText("here");
             a.setReference(bookmark.URL);
             a.setTarget("_blank");
-
-            // This demonstrates a mix & match of Gizmo '@@@' wildcard and Java '%s' formatting
+            a.setText("here");
+        
+            // This demonstrates complex element content with raw text as well as inline element(s)
             p = new ParagraphElement();
-            p.setContent(String.format("Click @@@ to navigate to the %s website", bookmark.NAME), a);
+            p.addText("Click ");
+            p.addElement(a);
+            p.addText(String.format(" to navigate to the %s website", bookmark.NAME));
             div.appendChild(p);
-
+        
             p = new ParagraphElement();
             p.setText("This is another paragraph with no inline elements");
             div.appendChild(p);
         }
-
-        Document html = new Document("Example").init();
+        
+        Document html = new Document("Demo").init();
         html.setContent(content);
 
         System.out.println(html);
@@ -99,6 +100,6 @@ public class Example {
 </html>
 ```
 
-... which may be previewed using the link below.
+... which is viewable using the link below.
 
 https://htmlpreview.github.io/?https://github.com/ray-moore/gizmo/blob/master/example.html
