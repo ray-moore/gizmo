@@ -59,7 +59,7 @@ public abstract class Element implements Renderable {
     }
 
     public void addElement(Element element) {
-        if (element.getType() == Type.block) {
+        if (this.getType() == Type.inline && element.getType() == Type.block) {
             String msg = String.format("Cannot use block level '%s' element for inline content", element.getTag());
             throw new IllegalArgumentException(msg);
         }

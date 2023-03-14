@@ -8,10 +8,10 @@ public class AnchorElement extends Element {
     }
 
     public void setReference(String path) {
-        setAttribute("href", path);
+        this.setAttribute("href", path);
     }
 
     public void setTarget(String target) {
-        setAttribute("target", target);
+        this.setAttribute("target", target);
     }
 }

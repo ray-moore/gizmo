@@ -65,13 +65,13 @@ public class Document extends Element {
     //  Inner Classes
     // --------------------
 
-    public static class Body extends Element {
+    private static class Body extends Element {
         public Body() {
             super(Type.block, "body");
         }
     }
 
-    public static class Head extends Element {
+    private static class Head extends Element {
         public Head(String title) {
             super(Type.block, "head");
             this.appendChild(new TitleElement(title));

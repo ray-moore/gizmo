@@ -5,6 +5,7 @@ import xyz.raymoore.gizmo.element.body.ContainerElement;
 import xyz.raymoore.gizmo.element.body.HeaderElement;
 import xyz.raymoore.gizmo.element.body.ParagraphElement;
 
+import javax.print.Doc;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -14,68 +15,86 @@ import java.util.UUID;
  */
 public class Scratchpad {
     public static void main(String[] args) {
-        ContainerElement content = new ContainerElement();
-        content.setId("example");
+        ParagraphElement p = new ParagraphElement();
+        p.setText("Look at me, I'm a paragraph!");
 
-        HeaderElement title = new HeaderElement(HeaderElement.Level.h1);
-        title.setText("Bookmark List");
-        content.appendChild(title);
+        ContainerElement div = new ContainerElement();
+        div.addText("This is an inline element that's a block");
+        div.addElement(p);
+        div.addText("Did you see that?");
+        div.addText("This is line four btw");
 
-        ContainerElement list = new ContainerElement();
-        list.addClass("bookmark-list");
-        content.appendChild(list);
+        Document doc = new Document("Does this work?");
+        doc.setContent(div);
 
-        ContainerElement div;
-        AnchorElement a;
-        ParagraphElement p;
+        System.out.println(doc);
+    }
 
-        List<Bookmark> bookmarks = mockData();  // Mock database retrieval as fixed list
-        for (Bookmark bookmark : bookmarks) {
-            div = new ContainerElement();
-            div.addClass("bookmark");
-            div.setData("bookmarkId", UUID.randomUUID().toString());  // Mock primary key as random UUID
-            list.appendChild(div);
+    public static class BookmarkDemo {
+        public static void execute() {
+            ContainerElement content = new ContainerElement();
+            content.setId("example");
 
-            a = new AnchorElement();
-            a.addClass("bold");
-            a.setReference(bookmark.URL);
-            a.setTarget("_blank");
-            a.setText("here");
+            HeaderElement title = new HeaderElement(HeaderElement.Level.h1);
+            title.setText("Bookmark List");
+            content.appendChild(title);
 
-            // This demonstrates complex element content with raw text as well as inline element(s)
-            p = new ParagraphElement();
-            p.addText("Click ");
-            p.addElement(a);
-            p.addText(" to navigate to the %s website", bookmark.NAME);
-            div.appendChild(p);
+            ContainerElement list = new ContainerElement();
+            list.addClass("bookmark-list");
+            content.appendChild(list);
 
-            p = new ParagraphElement();
-            p.setText("This is another paragraph with no inline elements");
-            div.appendChild(p);
+            ContainerElement div;
+            AnchorElement a;
+            ParagraphElement p;
+
+            List<Bookmark> bookmarks = mockData();  // Mock database retrieval as fixed list
+            for (Bookmark bookmark : bookmarks) {
+                div = new ContainerElement();
+                div.addClass("bookmark");
+                div.setData("bookmarkId", UUID.randomUUID().toString());  // Mock primary key as random UUID
+                list.appendChild(div);
+
+                a = new AnchorElement();
+                a.addClass("bold");
+                a.setReference(bookmark.URL);
+                a.setTarget("_blank");
+                a.setText("here");
+
+                // This demonstrates complex element content with raw text as well as inline element(s)
+                p = new ParagraphElement();
+                p.addText("Click ");
+                p.addElement(a);
+                p.addText(" to navigate to the %s website", bookmark.NAME);
+                div.appendChild(p);
+
+                p = new ParagraphElement();
+                p.setText("This is another paragraph with no inline elements");
+                div.appendChild(p);
+            }
+
+            Document html = new Document("Example").init();
+            html.setContent(content);
+
+            System.out.println(html);  // Mock page response as console output
         }
 
-        Document html = new Document("Example").init();
-        html.setContent(content);
+        public static List<Bookmark> mockData() {
+            List<Bookmark> data = new ArrayList<>();
+            data.add(new Bookmark("Google", "http://google.com"));
+            data.add(new Bookmark("Netflix", "http://netflix.com"));
+            data.add(new Bookmark("<This> & <That>", "http://testcase.dev"));
 
-        System.out.println(html);  // Mock page response as console output
-    }
+            return data;
+        }
 
-    public static List<Bookmark> mockData() {
-        List<Bookmark> data = new ArrayList<>();
-        data.add(new Bookmark("Google", "http://google.com"));
-        data.add(new Bookmark("Netflix", "http://netflix.com"));
-        data.add(new Bookmark("<This> & <That>", "http://testcase.dev"));
+        public static class Bookmark {
+            String NAME;
+            String URL;
 
-        return data;
-    }
-
-    public static class Bookmark {
-        String NAME;
-        String URL;
-
-        Bookmark(String name, String url) {
-            this.NAME = name;
-            this.URL = url;
+            Bookmark(String name, String url) {
+                this.NAME = name;
+                this.URL = url;
+            }
         }
     }
 }
