@@ -113,6 +113,17 @@ public abstract class Element implements Renderable {
         setAttribute("class", builder.toString());
     }
 
+    public void setData(String key, String value) {
+        // Convert "camelCase" key to "kebab-case" key
+        key = key.replaceAll("([a-z0-9])([A-Z])", "$1-$2").toLowerCase();
+
+        setAttribute(String.format("data-%s", key), value);
+    }
+
+    public void setHidden() {
+        setAttribute("hidden");
+    }
+
     /**
      * This returns the HTML as a string
      * @return HTML content

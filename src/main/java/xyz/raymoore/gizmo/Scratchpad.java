@@ -7,6 +7,7 @@ import xyz.raymoore.gizmo.element.body.ParagraphElement;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * This class is used as a "scratchpad" and is constantly in flux.
@@ -28,10 +29,11 @@ public class Scratchpad {
         AnchorElement a;
         ParagraphElement p;
 
-        List<Bookmark> bookmarks = mockData();  // Mock database retrieval
+        List<Bookmark> bookmarks = mockData();  // Mock database retrieval as fixed list
         for (Bookmark bookmark : bookmarks) {
             div = new ContainerElement();
             div.addClass("bookmark");
+            div.setData("bookmarkId", UUID.randomUUID().toString());  // Mock primary key as random UUID
             list.appendChild(div);
 
             a = new AnchorElement();
@@ -55,7 +57,7 @@ public class Scratchpad {
         Document html = new Document("Example").init();
         html.setContent(content);
 
-        System.out.println(html);  // Mock page response
+        System.out.println(html);  // Mock page response as console output
     }
 
     public static List<Bookmark> mockData() {
