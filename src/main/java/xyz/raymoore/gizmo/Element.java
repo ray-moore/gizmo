@@ -60,7 +60,7 @@ public abstract class Element implements Renderable {
 
     public void addElement(Element element) {
         if (this.getType() == Type.inline && element.getType() == Type.block) {
-            String msg = String.format("Cannot use block level '%s' element for inline content", element.getTag());
+            String msg = String.format("Cannot add block '%s' tag to inline '%s' tag", element.getTag(), tag);
             throw new IllegalArgumentException(msg);
         }
 
@@ -130,43 +130,47 @@ public abstract class Element implements Renderable {
      */
 
     public String render(int padding) {
-        StringBuilder builder = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
 
         // Start tag
-        builder.append(" ".repeat(padding));
-        builder.append("<");
-        builder.append(tag);
+        sb.append(" ".repeat(padding));
+        sb.append("<");
+        sb.append(tag);
         for (String key : attributes.keySet()) {
             // Insert tag attributes
-            builder.append(" ");
-            builder.append(key);
+            sb.append(" ");
+            sb.append(key);
             if (attributes.get(key) == null) {
                 continue;  // Used for 'checked', 'hidden', etc.
             }
-            builder.append("=\"");
-            builder.append(attributes.get(key));
-            builder.append("\"");
+            sb.append("=\"");
+            sb.append(attributes.get(key));
+            sb.append("\"");
         }
-        builder.append(">");
+        sb.append(">");
 
         // Handle void elements
         if (isVoid) {
-            return builder.toString();
+            return sb.toString();
         }
 
         if (children.size() > 0) {
             // Render children and handle padding
             for (Element child : children) {
-                builder.append('\n');
-                builder.append(child.render(padding + BLOCK_ELEMENT_PADDING_CHARS));
+                sb.append('\n');
+                sb.append(child.render(padding + BLOCK_ELEMENT_PADDING_CHARS));
             }
-            builder.append('\n');
-            builder.append(" ".repeat(padding));
+            sb.append('\n');
+            sb.append(" ".repeat(padding));
         } else {
             // Add inner content of inline elements and raw text
             for (Content c : content) {
+                if (content.size() > 1) {
+                    sb.append('\n');
+                    sb.append(" ".repeat(padding + BLOCK_ELEMENT_PADDING_CHARS));
+                }
                 if (c.getType() == Content.Type.inline) {
-                    builder.append(c.getElement().render(0));
+                    sb.append(c.getElement().render(0));
                     continue;
                 }
                 // @formatter:off
@@ -175,16 +179,20 @@ public abstract class Element implements Renderable {
                             .replace("<", "&lt;")
                             .replace(">", "&gt;");
                 // @formatter:on
-                builder.append(innerHTML);
+                sb.append(innerHTML);
+            }
+            if (content.size() > 1) {
+                sb.append('\n');
+                sb.append(" ".repeat(padding));
             }
         }
 
         // Close tag
-        builder.append("</");
-        builder.append(tag);
-        builder.append(">");
+        sb.append("</");
+        sb.append(tag);
+        sb.append(">");
 
-        return builder.toString();
+        return sb.toString();
     }
 
     @Override

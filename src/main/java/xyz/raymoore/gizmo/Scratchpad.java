@@ -15,19 +15,7 @@ import java.util.UUID;
  */
 public class Scratchpad {
     public static void main(String[] args) {
-        ParagraphElement p = new ParagraphElement();
-        p.setText("Look at me, I'm a paragraph!");
-
-        ContainerElement div = new ContainerElement();
-        div.addText("This is an inline element that's a block");
-        div.addElement(p);
-        div.addText("Did you see that?");
-        div.addText("This is line four btw");
-
-        Document doc = new Document("Does this work?");
-        doc.setContent(div);
-
-        System.out.println(doc);
+        BookmarkDemo.execute();
     }
 
     public static class BookmarkDemo {
@@ -51,7 +39,7 @@ public class Scratchpad {
             for (Bookmark bookmark : bookmarks) {
                 div = new ContainerElement();
                 div.addClass("bookmark");
-                div.setData("bookmarkId", UUID.randomUUID().toString());  // Mock primary key as random UUID
+                div.setData("bookmarkId", bookmark.ID);  // Mock primary key as random UUID
                 list.appendChild(div);
 
                 a = new AnchorElement();
@@ -68,7 +56,7 @@ public class Scratchpad {
                 div.appendChild(p);
 
                 p = new ParagraphElement();
-                p.setText("This is another paragraph with no inline elements");
+                p.setText("This is another paragraph with no inline elements for demo purposes");
                 div.appendChild(p);
             }
 
@@ -88,10 +76,12 @@ public class Scratchpad {
         }
 
         public static class Bookmark {
+            String ID;
             String NAME;
             String URL;
 
             Bookmark(String name, String url) {
+                this.ID = UUID.randomUUID().toString();
                 this.NAME = name;
                 this.URL = url;
             }

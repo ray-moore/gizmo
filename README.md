@@ -22,11 +22,12 @@ public class Example {
         ContainerElement div;
         AnchorElement a;
         ParagraphElement p;
-        
-        List<Bookmark> bookmarks = mockData();  // Mock database retrieval
+
+        List<Bookmark> bookmarks = mockData();  // Mock database retrieval as fixed list
         for (Bookmark bookmark : bookmarks) {
             div = new ContainerElement();
             div.addClass("bookmark");
+            div.setData("bookmarkId", bookmark.ID);  // Mock primary key as random UUID
             list.appendChild(div);
 
             a = new AnchorElement();
@@ -43,7 +44,7 @@ public class Example {
             div.appendChild(p);
 
             p = new ParagraphElement();
-            p.setText("This is another paragraph with no inline elements");
+            p.setText("This is another paragraph with no inline elements for demo purposes");
             div.appendChild(p);
         }
 
@@ -79,17 +80,29 @@ public class Example {
     <div id="example">
       <h1>Bookmark List</h1>
       <div class="bookmark-list">
-        <div class="bookmark">
-          <p>Click <a class="bold" href="http://google.com" target="_blank">here</a> to navigate to the Google website</p>
-          <p>This is another paragraph with no inline elements</p>
+        <div class="bookmark" data-bookmark-id="cf44e750-962c-452f-bf8e-1337f8688fbc">
+          <p>
+            Click 
+            <a class="bold" href="http://google.com" target="_blank">here</a>
+             to navigate to the Google website
+          </p>
+          <p>This is another paragraph with no inline elements for demo purposes</p>
         </div>
-        <div class="bookmark">
-          <p>Click <a class="bold" href="http://netflix.com" target="_blank">here</a> to navigate to the Netflix website</p>
-          <p>This is another paragraph with no inline elements</p>
+        <div class="bookmark" data-bookmark-id="4070b81a-e2e7-40a5-9e8a-5a775481eb81">
+          <p>
+            Click 
+            <a class="bold" href="http://netflix.com" target="_blank">here</a>
+             to navigate to the Netflix website
+          </p>
+          <p>This is another paragraph with no inline elements for demo purposes</p>
         </div>
-        <div class="bookmark">
-          <p>Click <a class="bold" href="http://testcase.dev" target="_blank">here</a> to navigate to the &lt;This&gt; &amp; &lt;That&gt; website</p>
-          <p>This is another paragraph with no inline elements</p>
+        <div class="bookmark" data-bookmark-id="1fb34c8a-89bf-4631-9727-11d99f1d192f">
+          <p>
+            Click 
+            <a class="bold" href="http://testcase.dev" target="_blank">here</a>
+             to navigate to the &lt;This&gt; &amp; &lt;That&gt; website
+          </p>
+          <p>This is another paragraph with no inline elements for demo purposes</p>
         </div>
       </div>
     </div>
