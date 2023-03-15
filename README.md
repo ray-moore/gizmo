@@ -1,5 +1,6 @@
 # Gizmo
-Java library to render HTML content
+
+Java library to render HTML content. This is **not** a template engine.
 
 ## Example
 
@@ -23,7 +24,7 @@ public class Example {
         AnchorElement a;
         ParagraphElement p;
 
-        List<Bookmark> bookmarks = MockDatabase.use().getBookmarkHome().findAll();  // Mock database retrieval
+        List<Bookmark> bookmarks = MockSchema.use().getBookmarkHome().findAll();  // Mock database
         for (Bookmark bookmark : bookmarks) {
             div = new ContainerElement();
             div.addClass("bookmark");
