@@ -23,7 +23,7 @@ public class Example {
         AnchorElement a;
         ParagraphElement p;
 
-        List<Bookmark> bookmarks = mockData();  // Mock database retrieval as fixed list
+        List<Bookmark> bookmarks = MockDatabase.use().getBookmarkHome().findAll();  // Mock database retrieval
         for (Bookmark bookmark : bookmarks) {
             div = new ContainerElement();
             div.addClass("bookmark");
@@ -52,15 +52,6 @@ public class Example {
         html.setContent(content);
 
         System.out.println(html);  // Mock page response
-    }
-    
-    public static List<Bookmark> mockData() {
-        List<Bookmark> data = new ArrayList<>();
-        data.add(new Bookmark("Google", "http://google.com"));
-        data.add(new Bookmark("Netflix", "http://netflix.com"));
-        data.add(new Bookmark("<This> & <That>", "http://testcase.dev"));
-
-        return data;
     }
 }
 ```
