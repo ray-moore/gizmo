@@ -5,7 +5,6 @@ import xyz.raymoore.gizmo.element.body.ContainerElement;
 import xyz.raymoore.gizmo.element.body.HeaderElement;
 import xyz.raymoore.gizmo.element.body.ParagraphElement;
 
-import javax.print.Doc;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -20,16 +19,11 @@ public class Scratchpad {
 
     public static class BookmarkDemo {
         public static void execute() {
-            ContainerElement content = new ContainerElement();
-            content.setId("example");
-
             HeaderElement title = new HeaderElement(HeaderElement.Level.h1);
             title.setText("Bookmark List");
-            content.appendChild(title);
 
             ContainerElement list = new ContainerElement();
             list.addClass("bookmark-list");
-            content.appendChild(list);
 
             ContainerElement div;
             AnchorElement a;
@@ -40,7 +34,7 @@ public class Scratchpad {
                 div = new ContainerElement();
                 div.addClass("bookmark");
                 div.setData("bookmarkId", bookmark.ID);  // Mock primary key as random UUID
-                list.appendChild(div);
+                list.add(div);
 
                 a = new AnchorElement();
                 a.addClass("bold");
@@ -50,15 +44,20 @@ public class Scratchpad {
 
                 // This demonstrates complex element content with raw text as well as inline element(s)
                 p = new ParagraphElement();
-                p.addText("Click ");
-                p.addElement(a);
-                p.addText(" to navigate to the %s website", bookmark.NAME);
-                div.appendChild(p);
+                p.add("Click ");
+                p.add(a);
+                p.add(" to navigate to the %s website", bookmark.NAME);
+                div.add(p);
 
                 p = new ParagraphElement();
                 p.setText("This is another paragraph with no inline elements for demo purposes");
-                div.appendChild(p);
+                div.add(p);
             }
+
+            ContainerElement content = new ContainerElement();
+            content.setId("example");
+            content.add(title);
+            content.add(list);
 
             Document html = new Document("Example").init();
             html.setContent(content);

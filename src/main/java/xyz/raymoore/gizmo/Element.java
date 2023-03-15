@@ -12,14 +12,13 @@ public abstract class Element implements Renderable {
     //  Fields
     // --------------------
 
-    public static final int BLOCK_ELEMENT_PADDING_CHARS = 2;
+    public static final int NUM_PADDING_CHARS = 2;
 
     protected Type type;
     protected String tag;
     protected boolean isVoid;  // Void elements do not have a closing tag
     protected Map<String, String> attributes;
 
-    protected List<Element> children;  // List of child elements
     protected List<Content> content;  // List of inline elements and/or raw text
 
     // --------------------
@@ -30,7 +29,6 @@ public abstract class Element implements Renderable {
         this.type = type;
         this.tag = tag;
         this.attributes = new TreeMap<>();
-        this.children = new ArrayList<>();
         this.content = new ArrayList<>();
     }
 
@@ -46,10 +44,6 @@ public abstract class Element implements Renderable {
         return tag;
     }
 
-    public void appendChild(Element element) {
-        children.add(element);
-    }
-
     public void setAttribute(String key) {
         attributes.put(key, null);  // Used for 'checked', 'hidden', etc.
     }
@@ -58,7 +52,7 @@ public abstract class Element implements Renderable {
         attributes.put(key, value);
     }
 
-    public void addElement(Element element) {
+    public void add(Element element) {
         if (this.getType() == Type.inline && element.getType() == Type.block) {
             String msg = String.format("Cannot add block '%s' tag to inline '%s' tag", element.getTag(), tag);
             throw new IllegalArgumentException(msg);
@@ -67,12 +61,12 @@ public abstract class Element implements Renderable {
         this.content.add(new Content(element));
     }
 
-    public void addText(String text) {
+    public void add(String text) {
         this.content.add(new Content(text));
     }
 
-    public void addText(String format, Object... args) {
-        addText(String.format(format, args));
+    public void add(String format, Object... args) {
+        add(String.format(format, args));
     }
 
     public void setText(String text) {
@@ -154,37 +148,33 @@ public abstract class Element implements Renderable {
             return sb.toString();
         }
 
-        if (children.size() > 0) {
-            // Render children and handle padding
-            for (Element child : children) {
+        // Add content (i.e., elements, and/or raw text) with padding
+        boolean newLine = (content.size() > 1 || content.size() == 1 && content.get(0).type == Content.Type.element);
+        for (Content c : content) {
+            if (newLine) {
                 sb.append('\n');
-                sb.append(child.render(padding + BLOCK_ELEMENT_PADDING_CHARS));
             }
+
+            if (c.getType() == Content.Type.element) {
+                Element e = c.getElement();
+                sb.append(e.render(padding + NUM_PADDING_CHARS));
+                continue;
+            }
+
+            // @formatter:off
+            String innerHTML = c.getText()
+                    .replace("&", "&amp;")  // REPLACE '&' FIRST!
+                    .replace("<", "&lt;")
+                    .replace(">", "&gt;");
+            // @formatter:on
+            if (content.size() > 1) {
+                sb.append(" ".repeat(padding + NUM_PADDING_CHARS));
+            }
+            sb.append(innerHTML);
+        }
+        if (newLine) {
             sb.append('\n');
             sb.append(" ".repeat(padding));
-        } else {
-            // Add inner content of inline elements and raw text
-            for (Content c : content) {
-                if (content.size() > 1) {
-                    sb.append('\n');
-                    sb.append(" ".repeat(padding + BLOCK_ELEMENT_PADDING_CHARS));
-                }
-                if (c.getType() == Content.Type.inline) {
-                    sb.append(c.getElement().render(0));
-                    continue;
-                }
-                // @formatter:off
-                String innerHTML = c.getText()
-                            .replace("&", "&amp;")  // REPLACE '&' FIRST!
-                            .replace("<", "&lt;")
-                            .replace(">", "&gt;");
-                // @formatter:on
-                sb.append(innerHTML);
-            }
-            if (content.size() > 1) {
-                sb.append('\n');
-                sb.append(" ".repeat(padding));
-            }
         }
 
         // Close tag
@@ -206,7 +196,7 @@ public abstract class Element implements Renderable {
 
     public static class Content {
         public enum Type {
-            inline,
+            element,
             rawText
         }
 
@@ -215,7 +205,7 @@ public abstract class Element implements Renderable {
         private final String text;
 
         Content(Element element) {
-            this.type = Type.inline;
+            this.type = Type.element;
             this.element = element;
             this.text = null;
         }

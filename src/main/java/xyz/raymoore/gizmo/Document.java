@@ -12,9 +12,9 @@ public class Document extends Element {
     public Document(String title) {
         super(Type.block, "html");
         this.head = new Head(title);
-        appendChild(head);
+        add(head);
         this.body = new Body();
-        appendChild(body);
+        add(body);
     }
 
     // --------------------
@@ -46,11 +46,11 @@ public class Document extends Element {
     }
 
     public void addMeta(MetaElement element) {
-        this.head.appendChild(element);
+        this.head.add(element);
     }
 
     public void setContent(Element parent) {
-        body.children = Collections.singletonList(parent);  // Body has one and only one child
+        body.content = Collections.singletonList(new Content(parent));  // Body has one and only one child
     }
 
     @Override
@@ -74,7 +74,7 @@ public class Document extends Element {
     private static class Head extends Element {
         public Head(String title) {
             super(Type.block, "head");
-            this.appendChild(new TitleElement(title));
+            this.add(new TitleElement(title));
         }
     }
 }
